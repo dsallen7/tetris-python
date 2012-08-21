@@ -5,6 +5,9 @@ import os
 from data import *
 from images import *
 
+
+gameRunning = True
+
 class piece(pygame.sprite.Sprite):
     def __init__(self):
         self.rotationCount = 0
@@ -87,6 +90,7 @@ class piece(pygame.sprite.Sprite):
         self.backToTop(i)
 
     def backToTop(self, i):
+        global gameRunning
         if i == 1:
             self.location = [(100, 50), (125,50), (100,75), (125,75)]
             self.rect = (100,50,50,50)
@@ -122,6 +126,12 @@ class piece(pygame.sprite.Sprite):
             self.image = magicImg[self.magicNumber]
             return
         self.image = self.images[i-1][0]
+        for loc in self.location:
+            (x,y) = loc
+            print gameRunning
+            print myGrid.getBlock(x/blocksize, y/blocksize)
+            if myGrid.getBlock(x/blocksize, y/blocksize) != 0:
+                gameRunning = False
 
     def event_handler(self, event):
         if event.type == pygame.KEYDOWN:
@@ -368,9 +378,9 @@ random.seed()
 
 pieces = range(1,5)
 
-myPiece = piece()
-
 myGrid = grid()
+
+myPiece = piece()
 
 myDisplay = display()
 
@@ -380,7 +390,7 @@ fallcount = 0
 
 DIM = 10
 
-while True:
+while gameRunning:
     clock.tick(10)
     for event in pygame.event.get():
         myPiece.event_handler(event)
@@ -398,4 +408,6 @@ while True:
     myDisplay.update()
     allsprites.update()
     allsprites.draw(screen)
-    pygame.display.flip() 
+    pygame.display.flip()
+
+print 'Game over!\n'
