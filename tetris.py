@@ -128,18 +128,26 @@ class piece(pygame.sprite.Sprite):
         self.image = self.images[i-1][0]
         for loc in self.location:
             (x,y) = loc
-            print gameRunning
-            print myGrid.getBlock(x/blocksize, y/blocksize)
+            #print gameRunning
+            #print myGrid.getBlock(x/blocksize, y/blocksize)
             if myGrid.getBlock(x/blocksize, y/blocksize) != 0:
                 gameRunning = False
 
     def event_handler(self, event):
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_s:
+                self.takeScreenshot()
             if event.key == pygame.K_SPACE:
                 self.rotate()
             else:
                 self.move(pygame.key.name(event.key))
-
+    
+    def takeScreenshot(self):
+        serial = 1
+        while os.access("tetris{}.bmp".format(serial), os.F_OK):
+            serial += 1
+        pygame.image.save(screen, "tetris{}.bmp".format(serial))
+    
     def move(self, key):
         (x1,y1,x2,y2) = self.rect
         x = 0
